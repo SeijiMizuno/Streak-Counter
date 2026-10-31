@@ -1,9 +1,12 @@
 import {
     useState,
-} from 'react'
+} from 'react';
+
+import ListActivity from './ListActivity';
 
 const Activity = () => {
     const [activityName, setActivityName] = useState('');
+    const [refresh, setRefresh] = useState(0);
     const [message, setMessage] = useState('');
 
     const handleSaveActivity = async () => {
@@ -24,6 +27,7 @@ const Activity = () => {
 
             setMessage(`Activity "${data.data.activity_name}" saved successfully!`);
             setActivityName(''); // Clear the input field after successful save
+            setRefresh((prev) => prev + 1);
         } catch (error) {
             console.error("Error saving activity:", error);
             setMessage("An error occurred while saving the activity");
@@ -39,6 +43,9 @@ const Activity = () => {
                 <button onClick={handleSaveActivity}>Save Activity</button>
 
                 <p>{message}</p>
+            </div>
+            <div>
+                <ListActivity refresh={refresh} />
             </div>
         </>
     );

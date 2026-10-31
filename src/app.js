@@ -50,6 +50,35 @@ app.post("/api/activity", async (req, res) => {
     }
 });
 
+app.get("/api/listActivity", async (req, res) => {
+    try {
+        const userId = 1; // temporary static user ID for tests
+        const query = `
+            SELECT id, activity_name, created_at
+            FROM activities
+            WHERE user_id = $1
+            AND archived_at IS NULL
+            ORDER BY created_at DESC;
+        `;
+
+        const result = await pool.query(query, [userId]);
+
+        return res.status(200).json({
+            status: "ok",
+            message: "Activities fetched successfully!",
+            data: result.rows
+        });
+ 
+    } catch (error) {
+        console.error("Error fetching activities:", error);
+        return res.status(500).json({
+            status: "error",
+            message: "An error occurred while fetching activities"
+        });
+    }
+
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
